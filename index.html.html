@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ Going Places: 모험적인 여행지 추천</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS 스타일링 */
+        :root {
+            /* 모험적인 스타일의 색상 팔레트 */
+            --color-primary: #1e88e5; /* 시원한 블루 (바다/하늘) */
+            --color-secondary: #ffb300; /* 활기찬 오렌지/옐로우 (태양/모험) */
+            --color-dark: #333;
+            --color-light: #fff;
+            --color-background: #f0f4f7; /* 은은한 회색-하늘색 배경 */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 1. Hero Section (첨부된 이미지 스타일 적용) */
+        .hero-section {
+            background-image: url('https://picsum.photos/seed/adventure_trip/1200/500'); /* 모험적인 여행 이미지 사용 */
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-light);
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* 텍스트 가독성을 위한 오버레이 */
+        }
+
+        .hero-content {
+            z-index: 10;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5em;
+            margin-bottom: 5px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content p {
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        /* 2. Main Content Container */
+        .main-container {
+            width: 90%;
+            max-width: 900px;
+            margin: -80px auto 40px auto; /* Hero 아래로 올라오도록 음수 마진 사용 */
+            background: var(--color-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        h2 {
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-secondary);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Input/Button Styling */
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-dark);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: var(--color-secondary);
+            color: var(--color-dark);
+            padding: 15px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #f5a623;
+        }
+
+        /* 3. Result Box Styling */
+        .result-box {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #e5f5ff; /* 연한 블루 배경 */
+            border: 1px solid var(--color-primary);
+            border-left: 5px solid var(--color-primary); /* 강조 */
+            border-radius: 8px;
+            min-height: 150px;
+            white-space: pre-wrap;
+        }
+
+        .result-box h3 {
+            color: var(--color-primary);
+            margin-top: 0;
+        }
+
+        .recommendation-content {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap; /* 반응형 대응 */
+        }
+
+        .text-details {
+            flex: 2;
+        }
+
+        .image-score {
+            flex: 1;
+            min-width: 250px; /* 최소 너비 설정 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #c9e6f3;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-dark);
+            font-size: 14px;
+            text-align: center;
+            border: 2px dashed var(--color-primary);
+        }
+
+        .recommendation-item strong {
+            display: block;
+            color: var(--color-secondary);
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        /* 추천 점수 차트 스타일 */
+        .score-chart {
+            width: 100%;
+        }
+
+        .score-bar-container {
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+            height: 25px;
+        }
+
+        .score-bar {
+            height: 100%;
+            background-color: var(--color-primary);
+            border-radius: 5px;
+            text-align: right;
+            color: white;
+            padding-right: 8px;
+            line-height: 25px;
+            transition: width 1s ease-in-out;
+            min-width: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>GOING PLACES</h1>
+            <p>"I haven't been everywhere, but it's on my list."</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <h2>🗺️ 맞춤형 모험 여행지 찾기</h2>
+
+        <section class="input-section">
+            <div class="input-group">
+                <label for="mbti">MBTI (예: ENFJ, ISTP)</label>
+                <input type="text" id="mbti" placeholder="MBTI 4글자" maxlength="4" required>
+            </div>
+
+            <div class="input-group">
+                <label for="purpose">여행 목적</label>
+                <select id="purpose" required>
+                    <option value="">선택하세요</option>
+                    <option value="힐링">✨ 힐링</option>
+                    <option value="액티비티">⛰️ 액티비티</option>
+                    <option value="출장">💼 출장</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="partner">여행 파트너 유무</label>
+                <select id="partner" required>
+                    <option value="">선택하세요</option>
+                    <option value="유">👫 파트너 있음</option>
+                    <option value="무">👤 혼자 여행</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="duration">여행 기간 (일)</label>
+                <input type="number" id="duration" placeholder="여행 일수" min="1" required>
+            </div>
+
+            <div class="input-group">
+                <label for="budget">예산 (만원)</label>
+                <input type="number" id="budget" placeholder="예산 (예: 100)" min="1" required>
+            </div>
+        </section>
+
+        <button onclick="recommendTrip()">⭐ 추천받고 모험 떠나기</button>
+
+        <section id="resultBox" class="result-box">
+            <h3>결과를 기다리는 당신은 이미 모험가입니다.</h3>
+            <p>여행 정보를 입력하고 '추천받고 모험 떠나기' 버튼을 눌러보세요!</p>
+        </section>
+    </div>
+
+    <script>
+        /* JavaScript 알고리즘 (이전 코드와 동일) */
+
+        // 데이터 기반 추천 로직
+        const recommendations = {
+            "ENFP_액티비티_유": {
+                place: "아이슬란드 - 골든 서클",
+                spot: "숨겨진 동굴 폭포 '글리우프라부이' (현지인 전용 트래킹)",
+                food: "레이캬비크의 'Bæjarins Beztu Pylsur' 핫도그 (별점: 4.5)",
+                stay: "외곽의 특이한 디자인 에어비앤비 (별점: 4.8)",
+                imgName: "아이슬란드-빙하-모험",
+                score: 92
+            },
+            "ISTP_액티비티_무": {
+                place: "네팔 - 안나푸르나 베이스 캠프 (ABC) 트레킹",
+                spot: "풀코스 대신 현지인이 알려주는 샛길 루트 (지도에 없는 길)",
+                food: "포카라의 로컬 달밧 정식 (별점: 4.3)",
+                stay: "트레킹 중간의 조용한 롯지 (별점: 4.0)",
+                imgName: "네팔-히말라야-샛길",
+                score: 95
+            },
+            "ISFJ_힐링_유": {
+                place: "스위스 - 인터라켄 외곽의 작은 마을",
+                spot: "툰 호수가 내려다보이는 작은 목장 카페 (숨겨진 보석)",
+                food: "지역 주민이 운영하는 퐁듀 식당 (별점: 4.7)",
+                stay: "베른 알프스의 전통 샬레 (별점: 4.6)",
+                imgName: "스위스-툰호수-샬레",
+                score: 85
+            },
+            "ENTJ_출장_무": {
+                place: "싱가포르 - 비즈니스 지구와 인접한 소규모 상업 지구",
+                spot: "아침 일찍 현지 스타트업 커뮤니티 모임 장소 (미래를 읽는 곳)",
+                food: "라우 파 삿 호커 센터의 사테 거리 (별점: 4.2)",
+                stay: "다운타운 근처의 서비스 아파트먼트 (별점: 4.4)",
+                imgName: "싱가포르-호커센터",
+                score: 80
+            },
+            // 디폴트 (모험적 스타일 강조)
+            "default": {
+                place: "튀르키예 - 카파도키아의 괴레메 외곽",
+                spot: "열기구가 뜨지 않는 새벽 시간대의 비밀 전망대 (가장 모험적인 뷰)",
+                food: "항아리 케밥을 파는 동네 식당 (별점: 4.1)",
+                stay: "동굴 호텔 중에서도 가장 깊숙한 곳의 방 (별점: 4.3)",
+                imgName: "튀르키예-카파도키아-동굴",
+                score: 88
+            }
+        };
+
+        function recommendTrip() {
+            // 1. 입력 값 가져오기
+            const mbti = document.getElementById('mbti').value.toUpperCase().trim();
+            const purpose = document.getElementById('purpose').value;
+            const partner = document.getElementById('partner').value;
+            const duration = parseInt(document.getElementById('duration').value);
+            const budget = parseInt(document.getElementById('budget').value);
+
+            const resultBox = document.getElementById('resultBox');
+
+            // 2. 필수 입력값 검증
+            if (!mbti || mbti.length !== 4 || !purpose || !partner || isNaN(duration) || isNaN(budget)) {
+                resultBox.innerHTML = `
+                    <h3>🚨 입력 오류</h3>
+                    <p style="color: red;">모든 항목을 정확하게 입력했는지 확인해주세요. MBTI는 4글자여야 합니다.</p>
+                `;
+                return;
+            }
+
+            // 3. 알고리즘: 맞춤형 추천 데이터 선택
+            const key = `${mbti.substring(0, 4)}_${purpose}_${partner}`;
+            const recommendation = recommendations[key] || recommendations['default'];
+            const recommendationScore = recommendation.score;
+
+            // 4. 알고리즘: 예산/기간에 따른 추가 코멘트 생성
+            let budgetComment = "";
+            let totalBudget = 0;
+
+            if (duration >= 7 && budget >= 200) {
+                budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 충분히 이색적인 장기 탐험이 가능합니다. 예산의 유연성이 매우 높습니다.`;
+                totalBudget = budget * 10000;
+            } else if (duration < 4 && budget <= 100) {
+                budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 짧고 굵은 모험을 추천합니다. 비용 효율적인 일정을 계획해보세요.`;
+                totalBudget = budget * 10000;
+            } else {
+                budgetComment = `총 ${budget.toLocaleString()}만원의 예산은 적절합니다. 자유로운 일정을 즐기며 예상치 못한 모험에 대비할 수 있습니다.`;
+                totalBudget = budget * 10000;
+            }
+
+            // 5. 결과 HTML 생성
+            resultBox.innerHTML = `
+                <h3>🎉 ${mbti}님, 모험이 당신을 기다립니다!</h3>
+
+                <div class="recommendation-content">
+                    
+                    <div class="text-details">
+                        <div class="recommendation-item">
+                            <strong>📍 MBTI 맞춤 여행지 추천 (Text)</strong>
+                            ${recommendation.place}에서 당신의 모험심을 깨워보세요!
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <strong>🗺️ 현지인만 아는 특별 관광명소 (Text)</strong>
+                            ${recommendation.spot}
+                        </div>
+
+                        <div class="recommendation-item">
+                            <strong>🍽️ 근처 음식점 / 숙박업소 리뷰/별점 (Text)</strong>
+                            <p>음식점: ${recommendation.food}</p>
+                            <p>숙박업소: ${recommendation.stay}</p>
+                        </div>
+
+                        <div class="recommendation-item">
+                            <strong>💰 예산 정보 (Text)</strong>
+                            <p>여행 기간: ${duration}일 / 예산: ${totalBudget.toLocaleString()}원</p>
+                            <p>➡️ ${budgetComment}</p>
+                        </div>
+                    </div>
+
+                    <div class="image-score">
+                        <div class="image-placeholder">
+                            [관련 이미지: ${recommendation.imgName}]<br>
+                            <span style="font-style: italic;">(모험적인 스타일의 장소 이미지)</span>
+                        </div>
+
+                        <strong>📊 ${mbti} 맞춤 추천 점수 (${recommendationScore}점)</strong>
+                        <div class="score-chart">
+                            <div class="score-bar-container">
+                                <div class="score-bar" style="width: ${recommendationScore}%;">
+                                    ${recommendationScore}% 적합
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
