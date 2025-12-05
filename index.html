@@ -379,19 +379,7 @@
                             <strong>💰 예산 정보 (Text)</strong>
                             <p>여행 기간: ${duration}일 / 예산: ${totalBudget.toLocaleString()}원</p>
                             <p>➡️ ${budgetComment}</p>
-                        </div>
-                                    
-                        <strong>📊 ${mbti} 맞춤 추천 점수 (${recommendationScore}점)</strong>
-                        <div class="score-chart">
-                            <div class="score-bar-container">
-                                <div class="score-bar" style="width: ${recommendationScore}%;">
-                                    ${recommendationScore}% 적합
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+                       
        const requestData = {
     mbti: mbti,
     purpose: purpose,
@@ -423,5 +411,6 @@ fetch(BACKEND_URL, {
 
 </body>
 </html>
+
 
 
