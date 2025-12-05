@@ -399,8 +399,35 @@
                     </div>
                 </div>
             `;
-        }
+       const requestData = {
+    mbti: mbti,
+    purpose: purpose,
+    partner: partner,
+    duration: duration,
+    budget: budget
+};
+
+// 주의: 아래 주소는 Replit 실행 후 나오는 실제 주소(Webview URL)로 변경해야 합니다.
+// 예: "https://your-repl-name.username.repl.co/register"
+const BACKEND_URL = "https://['https://1fb54076-6e02-4277-9c5d-97121d28285d-00-35v2f5prt0q1u.sisko.replit.dev/']/register"; 
+
+fetch(BACKEND_URL, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(requestData)
+})
+.then(response => response.json())
+.then(data => {
+    console.log("서버 응답:", data);
+    alert("서버에 여행 정보가 등록되었습니다! (콘솔 확인)");
+})
+.catch(error => {
+    console.error("에러 발생:", error);
+}); }
     </script>
 
 </body>
 </html>
+
