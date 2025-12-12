@@ -267,42 +267,47 @@
 
   
        
-        <script>
+        
+    <script>
     // MBTI의 4가지 기질에 따른 기본 추천 데이터 확장
     const recommendations = {
-        // 정확히 매칭되는 키 (기존 데이터 유지)
-        "ENFP_액티비티_유": { place: "아이슬란드 - 골든 서클", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
-        "ISTP_액티비티_무": { place: "네팔 - 안나푸르나 베이스 캠프 (ABC) 트레킹", spot: "현지인 샛길 루트", food: "포카라 달밧 정식", stay: "롯지", imgName: "네팔-히말라야-샛길", score: 95 },
-        "ISFJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을", spot: "툰 호수 목장 카페", food: "지역 퐁듀 식당", stay: "전통 샬레", imgName: "스위스-툰호수-샬레", score: 85 },
-        "ENTJ_출장_무": { place: "싱가포르 - 소규모 상업 지구", spot: "스타트업 커뮤니티", food: "라우 파 삿 사테", stay: "서비스 아파트먼트", imgName: "싱가포르-호커센터", score: 80 },
+        // 기존 4가지 '정확히 매칭되는 키'를 기질+목적+파트너로 변경하여 2순위 로직에 포함시킵니다.
+        // 예를 들어 ENFP(NF)가 액티비티+유를 선택하면 아이슬란드, 힐링+무를 선택하면 코스타리카가 나오게 됩니다.
+        
+        // NF (외교관) 기반 추천
+        "NF_액티비티_유": { place: "아이슬란드 - 골든 서클 (친목 액티비티)", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
+        "NF_힐링_무": { place: "코스타리카 - 환경 친화적 정글 숙소 (개인 힐링)", spot: "숨겨진 온천", food: "유기농 채식 요리", stay: "친환경 롯지", imgName: "코스타리카-정글-힐링", score: 90 },
+        
+        // SP (탐험가) 기반 추천
+        "SP_액티비티_무": { place: "네팔 - ABC 트레킹 (홀로 모험)", spot: "현지인 샛길 루트", food: "포카라 달밧 정식", stay: "롯지", imgName: "네팔-히말라야-샛길", score: 95 },
+        "SP_힐링_유": { place: "바르셀로나 - 열정적인 도시 (파트너와 함께 즐기는 휴식)", spot: "숨겨진 타파스 바 거리", food: "타파스 맛집", stay: "부티크 호텔", imgName: "바르셀로나-익스트림-타파스", score: 93 },
+
+        // SJ (관리자) 기반 추천
+        "SJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을 (계획된 휴식)", spot: "툰 호수 목장 카페", food: "지역 퐁듀 식당", stay: "전통 샬레", imgName: "스위스-툰호수-샬레", score: 85 },
+        
+        // NT (분석가) 기반 추천
+        "NT_출장_무": { place: "싱가포르 - 소규모 상업 지구 (집중 출장)", spot: "스타트업 커뮤니티", food: "라우 파 삿 사테", stay: "서비스 아파트먼트", imgName: "싱가포르-호커센터", score: 80 },
+
 
         // ********************************************
-        // 5가지 입력값을 반영하도록 MBTI 기질별 세분화된 추천 키 추가
+        // 예산/기간이 포함된 세분화 추천 (예산/기간에 따른 장소 미세 조정용)
         // 형식: [기질]_[예산/기간 성격]
         // ********************************************
 
-        // NT (분석가)
-        "NT_장기-고가": { place: "스톡홀름 (스웨덴) - 북유럽 디자인 및 IT 허브 탐방", spot: "노벨 박물관의 비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
-        "NT_단기-저가": { place: "프라하 (체코) - 철학적, 역사적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "저렴하고 오래된 선술집의 굴라쉬", stay: "중앙역 근처의 깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
-
-        // NF (외교관)
-        "NF_장기-고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링 여행", spot: "명상가를 위한 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰를 가진 친환경 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
-        "NF_단기-저가": { place: "제주도 (대한민국) - 마음이 맞는 사람들과의 공동체 여행", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민들이 운영하는 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
-
-        // SJ (관리자)
-        "SJ_장기-고가": { place: "런던 (영국) - 체계적인 문화, 박물관 탐방", spot: "대영 박물관의 보수 공사가 진행되는 구역", food: "역사적인 5성급 호텔의 정통 애프터눈 티", stay: "클래식한 서비스의 유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
-        "SJ_단기-저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식/쇼핑 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "현지인 줄 서는 가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
-        
-        // SP (탐험가)
-        "SP_장기-고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 공식 코스 외의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
-        "SP_단기-저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "현지인들이 모르는 루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "저렴하지만 개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
+        "NT_장기-고가": { place: "스톡홀름 (스웨덴) - 북유럽 IT 허브 탐방", spot: "비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
+        "NT_단기-저가": { place: "프라하 (체코) - 철학적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "선술집의 굴라쉬", stay: "깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
+        "NF_장기-고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링", spot: "명상 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
+        "NF_단기-저가": { place: "제주도 (대한민국) - 공동체 예술 공간 탐방", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
+        "SJ_장기-고가": { place: "런던 (영국) - 체계적인 박물관 탐방", spot: "대영 박물관의 보수 공사 구역", food: "5성급 호텔의 정통 애프터눈 티", stay: "유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
+        "SJ_단기-저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
+        "SP_장기-고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
+        "SP_단기-저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
 
         // 궁극적인 디폴트
         "default": { place: "튀르키예 - 카파도키아의 괴레메 외곽", spot: "열기구가 뜨지 않는 비밀 전망대", food: "항아리 케밥", stay: "동굴 호텔", imgName: "카파도키아-동굴", score: 88 }
     };
 
     function getMbtiTemperament(mbti) {
-        // MBTI 4글자에서 기질 (Temperament)을 판단하는 단순 로직
         const S_N = mbti[1];
         const T_F = mbti[2];
         const J_P = mbti[3];
@@ -315,15 +320,12 @@
     }
 
     function getBudgetDurationClass(duration, budget) {
-        // 기간과 예산을 기준으로 여행 성격을 4가지로 분류
         if (duration >= 7 && budget >= 200) {
-            return '장기-고가'; // 장기간, 넉넉한 예산
-        } else if (duration >= 5 && budget >= 100) {
-            return '중기-중가'; // 중간 기간, 평균 예산 (새로운 키 추가 필요)
+            return '장기-고가'; 
         } else if (duration < 4 && budget <= 100) {
-            return '단기-저가'; // 짧은 기간, 효율적인 예산
+            return '단기-저가'; 
         } else {
-            return '중간'; // 그 외의 모든 경우
+            return '중간'; // 중간으로 분류된 항목은 기질+목적/파트너 로직을 따르게 됩니다.
         }
     }
 
@@ -344,22 +346,22 @@
         }
 
         // 3. 알고리즘: 5가지 입력값 기반 추천 데이터 선택
-        const exactKey = `${mbti.substring(0, 4)}_${purpose}_${partner}`;
         const temperament = getMbtiTemperament(mbti);
         const budgetClass = getBudgetDurationClass(duration, budget);
         
-        // 1순위: 5가지 조건 중 3가지 (MBTI, 목적, 파트너)가 정확히 일치하는 경우
-        let recommendation = recommendations[exactKey];
+        // 1순위: MBTI 기질 + 여행 목적 + 파트너 유무 (여행의 '성격'을 결정)
+        const travelStyleKey = `${temperament}_${purpose}_${partner}`; 
+        
+        // 2순위: MBTI 기질 + 예산/기간 성격 (예산에 따른 장소/숙소의 '레벨'을 결정)
+        const budgetLevelKey = `${temperament}_${budgetClass}`;
+        
+        
+        let recommendation = recommendations[travelStyleKey];
 
-        // 2순위: MBTI 기질 + 예산/기간 성격이 일치하는 경우 (가장 세밀한 맞춤 추천)
-        const combinedKey = `${temperament}_${budgetClass}`;
-        if (!recommendation && recommendations[combinedKey]) {
-            recommendation = recommendations[combinedKey];
-        }
-
-        // 3순위: MBTI 기질만 일치하는 경우 (중간값)
-        if (!recommendation && recommendations[temperament]) {
-            recommendation = recommendations[temperament];
+        // 2순위: 1순위 키가 없다면, 예산 레벨 키를 시도합니다.
+        // 이때, 예산 레벨 키는 '장기-고가' 또는 '단기-저가'인 경우에만 작동합니다.
+        if (!recommendation && budgetClass !== '중간' && recommendations[budgetLevelKey]) {
+            recommendation = recommendations[budgetLevelKey];
         }
 
         // 최종: 궁극적인 디폴트
@@ -423,7 +425,9 @@
         `;
     }
 </script>
+
     
     
+
 
 
