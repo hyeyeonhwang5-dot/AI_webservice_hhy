@@ -222,86 +222,86 @@
         <h2>🗺️ 맞춤형 모험 여행지 찾기</h2>
 
         <section class="input-section">
-            <div class="input-group">
-                <label for="mbti">MBTI (예: ENFJ, ISTP)</label>
-                <input type="text" id="mbti" placeholder="MBTI 4글자" maxlength="4" required>
-            </div>
+            <div class="input-group">
+                <label for="mbti">MBTI (예: ENFJ, ISTP)</label>
+                <input type="text" id="mbti" placeholder="MBTI 4글자" maxlength="4" required>
+            </div>
 
-            <div class="input-group">
-                <label for="purpose">여행 목적</label>
-                <select id="purpose" required>
-                    <option value="">선택하세요</option>
-                    <option value="힐링">✨ 힐링</option>
-                    <option value="액티비티">⛰️ 액티비티</option>
-                    <option value="출장">💼 출장</option>
-                </select>
-            </div>
+            <div class="input-group">
+                <label for="purpose">여행 목적</label>
+                <select id="purpose" required>
+                    <option value="">선택하세요</option>
+                    <option value="힐링">✨ 힐링</option>
+                    <option value="액티비티">⛰️ 액티비티</option>
+                    <option value="출장">💼 출장</option>
+                </select>
+            </div>
 
-            <div class="input-group">
-                <label for="partner">여행 파트너 유무</label>
-                <select id="partner" required>
-                    <option value="">선택하세요</option>
-                    <option value="유">👫 파트너 있음</option>
-                    <option value="무">👤 혼자 여행</option>
-                </select>
-            </div>
+            <div class="input-group">
+                <label for="partner">여행 파트너 유무</label>
+                <select id="partner" required>
+                    <option value="">선택하세요</option>
+                    <option value="유">👫 파트너 있음</option>
+                    <option value="무">👤 혼자 여행</option>
+                </select>
+            </div>
 
-            <div class="input-group">
-                <label for="duration">여행 기간 (일)</label>
-                <input type="number" id="duration" placeholder="여행 일수" min="1" required>
-            </div>
+            <div class="input-group">
+                <label for="duration_class">여행 기간</label>
+                <select id="duration_class" required>
+                    <option value="">선택하세요</option>
+                    <option value="단기">⏱️ 단기 (4일 이하)</option>
+                    <option value="장기">🗓️ 장기 (5일 이상)</option>
+                </select>
+            </div>
 
-            <div class="input-group">
-                <label for="budget">예산 (만원)</label>
-                <input type="number" id="budget" placeholder="예산 (예: 100)" min="1" required>
-            </div>
-        </section>
-
-        <button onclick="recommendTrip()">⭐ 추천받고 모험 떠나기</button>
-
-        <section id="resultBox" class="result-box">
-            <h3>결과를 기다리는 당신은 이미 모험가입니다.</h3>
-            <p>여행 정보를 입력하고 '추천받고 모험 떠나기' 버튼을 눌러보세요!</p>
-        </section>
-    </div>
-
+            <div class="input-group">
+                <label for="budget_class">예산 수준</label>
+                <select id="budget_class" required>
+                    <option value="">선택하세요</option>
+                    <option value="저가">💵 저가 (가성비 중심)</option>
+                    <option value="고가">💎 고가 (프리미엄 중심)</option>
+                </select>
+            </div>
+        </section>
+        
+        <button onclick="recommendTrip()">⭐ 추천받고 모험 떠나기</button>
+        
+        <section id="resultBox" class="result-box">
+            <h3>결과를 기다리는 당신은 이미 모험가입니다.</h3>
+            <p>여행 정보를 입력하고 '추천받고 모험 떠나기' 버튼을 눌러보세요!</p>
+        </section>
+    </div>
   
        
         
     <script>
-    // MBTI의 4가지 기질에 따른 기본 추천 데이터 확장
+    // MBTI 기질 기반 추천 데이터 확장 (키 이름을 변경했습니다: duration_class, budget_class 사용)
     const recommendations = {
-        // 기존 4가지 '정확히 매칭되는 키'를 기질+목적+파트너로 변경하여 2순위 로직에 포함시킵니다.
-        // 예를 들어 ENFP(NF)가 액티비티+유를 선택하면 아이슬란드, 힐링+무를 선택하면 코스타리카가 나오게 됩니다.
-        
-        // NF (외교관) 기반 추천
+        // 형식: [기질]_[목적]_[파트너]
         "NF_액티비티_유": { place: "아이슬란드 - 골든 서클 (친목 액티비티)", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
         "NF_힐링_무": { place: "코스타리카 - 환경 친화적 정글 숙소 (개인 힐링)", spot: "숨겨진 온천", food: "유기농 채식 요리", stay: "친환경 롯지", imgName: "코스타리카-정글-힐링", score: 90 },
-        
-        // SP (탐험가) 기반 추천
         "SP_액티비티_무": { place: "네팔 - ABC 트레킹 (홀로 모험)", spot: "현지인 샛길 루트", food: "포카라 달밧 정식", stay: "롯지", imgName: "네팔-히말라야-샛길", score: 95 },
-        "SP_힐링_유": { place: "바르셀로나 - 열정적인 도시 (파트너와 함께 즐기는 휴식)", spot: "숨겨진 타파스 바 거리", food: "타파스 맛집", stay: "부티크 호텔", imgName: "바르셀로나-익스트림-타파스", score: 93 },
-
-        // SJ (관리자) 기반 추천
         "SJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을 (계획된 휴식)", spot: "툰 호수 목장 카페", food: "지역 퐁듀 식당", stay: "전통 샬레", imgName: "스위스-툰호수-샬레", score: 85 },
-        
-        // NT (분석가) 기반 추천
         "NT_출장_무": { place: "싱가포르 - 소규모 상업 지구 (집중 출장)", spot: "스타트업 커뮤니티", food: "라우 파 삿 사테", stay: "서비스 아파트먼트", imgName: "싱가포르-호커센터", score: 80 },
 
 
         // ********************************************
-        // 예산/기간이 포함된 세분화 추천 (예산/기간에 따른 장소 미세 조정용)
-        // 형식: [기질]_[예산/기간 성격]
+        // 예산/기간이 포함된 세분화 추천 (5가지 입력값 모두 반영)
+        // 형식: [기질]_[기간]_[예산]
         // ********************************************
 
-        "NT_장기-고가": { place: "스톡홀름 (스웨덴) - 북유럽 IT 허브 탐방", spot: "비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
-        "NT_단기-저가": { place: "프라하 (체코) - 철학적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "선술집의 굴라쉬", stay: "깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
-        "NF_장기-고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링", spot: "명상 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
-        "NF_단기-저가": { place: "제주도 (대한민국) - 공동체 예술 공간 탐방", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
-        "SJ_장기-고가": { place: "런던 (영국) - 체계적인 박물관 탐방", spot: "대영 박물관의 보수 공사 구역", food: "5성급 호텔의 정통 애프터눈 티", stay: "유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
-        "SJ_단기-저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
-        "SP_장기-고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
-        "SP_단기-저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
+        "NT_장기_고가": { place: "스톡홀름 (스웨덴) - 북유럽 IT 허브 탐방", spot: "비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
+        "NT_단기_저가": { place: "프라하 (체코) - 철학적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "선술집의 굴라쉬", stay: "깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
+        
+        "NF_장기_고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링", spot: "명상 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
+        "NF_단기_저가": { place: "제주도 (대한민국) - 공동체 예술 공간 탐방", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
+        
+        "SJ_장기_고가": { place: "런던 (영국) - 체계적인 박물관 탐방", spot: "대영 박물관의 보수 공사 구역", food: "5성급 호텔의 정통 애프터눈 티", stay: "유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
+        "SJ_단기_저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
+        
+        "SP_장기_고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
+        "SP_단기_저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
 
         // 궁극적인 디폴트
         "default": { place: "튀르키예 - 카파도키아의 괴레메 외곽", spot: "열기구가 뜨지 않는 비밀 전망대", food: "항아리 케밥", stay: "동굴 호텔", imgName: "카파도키아-동굴", score: 88 }
@@ -310,79 +310,62 @@
     function getMbtiTemperament(mbti) {
         const S_N = mbti[1];
         const T_F = mbti[2];
+        if (S_N === 'N' && T_F === 'T') return 'NT'; // 분석가
+        if (S_N === 'N' && T_F === 'F') return 'NF'; // 외교관
+        
         const J_P = mbti[3];
-
-        if (S_N === 'N' && T_F === 'T') return 'NT'; 
-        if (S_N === 'N' && T_F === 'F') return 'NF'; 
-        if (S_N === 'S' && J_P === 'J') return 'SJ'; 
-        if (S_N === 'S' && J_P === 'P') return 'SP'; 
+        if (S_N === 'S' && J_P === 'J') return 'SJ'; // 관리자
+        if (S_N === 'S' && J_P === 'P') return 'SP'; // 탐험가
         return ''; 
     }
 
-    function getBudgetDurationClass(duration, budget) {
-        if (duration >= 7 && budget >= 200) {
-            return '장기-고가'; 
-        } else if (duration < 4 && budget <= 100) {
-            return '단기-저가'; 
-        } else {
-            return '중간'; // 중간으로 분류된 항목은 기질+목적/파트너 로직을 따르게 됩니다.
-        }
-    }
-
-
     function recommendTrip() {
-        // 1. 입력 값 가져오기
+        // 1. 입력 값 가져오기 (새로운 ID 사용)
         const mbti = document.getElementById('mbti').value.toUpperCase().trim();
         const purpose = document.getElementById('purpose').value;
         const partner = document.getElementById('partner').value;
-        const duration = parseInt(document.getElementById('duration').value);
-        const budget = parseInt(document.getElementById('budget').value);
+        const duration_class = document.getElementById('duration_class').value; // '단기' 또는 '장기'
+        const budget_class = document.getElementById('budget_class').value;     // '저가' 또는 '고가'
         const resultBox = document.getElementById('resultBox');
 
-        // 2. 필수 입력값 검증 (생략)
-        if (!mbti || mbti.length !== 4 || !purpose || !partner || isNaN(duration) || isNaN(budget)) {
-            resultBox.innerHTML = `<h3>🚨 입력 오류</h3><p style="color: red;">모든 항목을 정확하게 입력했는지 확인해주세요.</p>`;
+        // 2. 필수 입력값 검증
+        if (!mbti || mbti.length !== 4 || !purpose || !partner || !duration_class || !budget_class) {
+            resultBox.innerHTML = `<h3>🚨 입력 오류</h3><p style="color: red;">모든 항목을 정확하게 선택해주세요.</p>`;
             return;
         }
 
         // 3. 알고리즘: 5가지 입력값 기반 추천 데이터 선택
         const temperament = getMbtiTemperament(mbti);
-        const budgetClass = getBudgetDurationClass(duration, budget);
         
-        // 1순위: MBTI 기질 + 여행 목적 + 파트너 유무 (여행의 '성격'을 결정)
+        // 1순위 키: MBTI 기질 + 기간 + 예산 (5가지 입력값을 모두 반영)
+        const allFactorsKey = `${temperament}_${duration_class}_${budget_class}`; 
+        
+        // 2순위 키: MBTI 기질 + 여행 목적 + 파트너 유무 (여행의 '성격'을 결정)
         const travelStyleKey = `${temperament}_${purpose}_${partner}`; 
         
-        // 2순위: MBTI 기질 + 예산/기간 성격 (예산에 따른 장소/숙소의 '레벨'을 결정)
-        const budgetLevelKey = `${temperament}_${budgetClass}`;
+        // 우선순위 결정
+        let recommendation = recommendations[allFactorsKey];
         
-        
-        let recommendation = recommendations[travelStyleKey];
-
-        // 2순위: 1순위 키가 없다면, 예산 레벨 키를 시도합니다.
-        // 이때, 예산 레벨 키는 '장기-고가' 또는 '단기-저가'인 경우에만 작동합니다.
-        if (!recommendation && budgetClass !== '중간' && recommendations[budgetLevelKey]) {
-            recommendation = recommendations[budgetLevelKey];
+        if (!recommendation) {
+            // 1순위 키가 없다면, 2순위 키를 시도합니다.
+            recommendation = recommendations[travelStyleKey];
         }
 
-        // 최종: 궁극적인 디폴트
         if (!recommendation) {
+            // 최종: 궁극적인 디폴트
             recommendation = recommendations['default'];
         }
         
         const recommendationScore = recommendation.score;
 
-        // 4. 예산/기간 코멘트 생성 (기존 로직 유지)
+        // 4. 결과 출력용 코멘트 생성
         let budgetComment = "";
-        let totalBudget = budget * 10000;
-        if (budgetClass === '장기-고가') {
-            budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 충분히 이색적인 장기 탐험이 가능합니다. 예산의 유연성이 매우 높습니다.`;
-        } else if (budgetClass === '단기-저가') {
-            budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 짧고 굵은 모험을 추천합니다. 비용 효율적인 일정을 계획해보세요.`;
-        } else {
-            budgetComment = `총 ${budget.toLocaleString()}만원의 예산은 적절합니다. 자유로운 일정을 즐기며 예상치 못한 모험에 대비할 수 있습니다.`;
-        }
+        let durationDescription = (duration_class === '장기' ? "5일 이상의 긴 일정" : "4일 이하의 짧은 일정");
+        let budgetDescription = (budget_class === '고가' ? "프리미엄 여정" : "가성비 높은 여정");
+        
+        budgetComment = `당신은 ${durationDescription}을 ${budgetDescription}으로 계획하고 계십니다. 추천된 장소는 이 조건에 최적화되어 있습니다.`;
 
-        // 5. 결과 HTML 생성 (생략)
+        // 5. 결과 HTML 생성 (변경 사항 반영)
         resultBox.innerHTML = `
             <h3>🎉 ${mbti}님, 모험이 당신을 기다립니다!</h3>
             <div class="recommendation-content">
@@ -402,8 +385,8 @@
                         <p>숙박업소: ${recommendation.stay}</p>
                     </div>
                     <div class="recommendation-item">
-                        <strong>💰 예산 정보</strong>
-                        <p>여행 기간: ${duration}일 / 예산: ${totalBudget.toLocaleString()}원</p>
+                        <strong>💰 여행 계획 정보</strong>
+                        <p>여행 기간: ${duration_class} / 예산 수준: ${budget_class} / 파트너: ${partner}</p>
                         <p>➡️ ${budgetComment}</p>
                     </div>
                 </div>
@@ -425,9 +408,6 @@
         `;
     }
 </script>
-
-    
-    
 
 
 
