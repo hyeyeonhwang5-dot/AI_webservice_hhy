@@ -266,128 +266,164 @@
     </div>
 
   
-       <script>
-        // 데이터 기반 추천 로직 (MBTI 기질 기반 포함)
-        const recommendations = {
-            "ENFP_액티비티_유": { place: "아이슬란드 - 골든 서클", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크의 'Bæjarins Beztu Pylsur' 핫도그 (별점: 4.5)", stay: "외곽의 특이한 디자인 에어비앤비 (별점: 4.8)", imgName: "아이슬란드-빙하-모험", score: 92 },
-            "ISTP_액티비티_무": { place: "네팔 - 안나푸르나 베이스 캠프 (ABC) 트레킹", spot: "풀코스 대신 현지인이 알려주는 샛길 루트 (지도에 없는 길)", food: "포카라의 로컬 달밧 정식 (별점: 4.3)", stay: "트레킹 중간의 조용한 롯지 (별점: 4.0)", imgName: "네팔-히말라야-샛길", score: 95 },
-            "ISFJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을", spot: "툰 호수가 내려다보이는 작은 목장 카페 (숨겨진 보석)", food: "지역 주민이 운영하는 퐁듀 식당 (별점: 4.7)", stay: "베른 알프스의 전통 샬레 (별점: 4.6)", imgName: "스위스-툰호수-샬레", score: 85 },
-            "ENTJ_출장_무": { place: "싱가포르 - 비즈니스 지구와 인접한 소규모 상업 지구", spot: "아침 일찍 현지 스타트업 커뮤니티 모임 장소 (미래를 읽는 곳)", food: "라우 파 삿 호커 센터의 사테 거리 (별점: 4.2)", stay: "다운타운 근처의 서비스 아파트먼트 (별점: 4.4)", imgName: "싱가포르-호커센터", score: 80 },
-            
-            // MBTI 기질 기반 일반 추천 (다양성 확보)
-            "NT": { place: "베를린 (독일) - 혁신과 예술의 도시", spot: "폐쇄된 공항 테겔의 재활용 공간 (지적 탐험)", food: "이색적인 퓨전 레스토랑 (별점: 4.0)", stay: "디자인 중심의 독립 호텔 (별점: 4.5)", imgName: "베를린-혁신-테겔", score: 88 },
-            "NF": { place: "코스타리카 - 환경 친화적 정글 숙소", spot: "생태 관광 보호 구역의 숨겨진 온천 (감성적 힐링)", food: "유기농 현지 채식 요리 (별점: 4.6)", stay: "친환경 롯지 (별점: 4.7)", imgName: "코스타리카-정글-힐링", score: 90 },
-            "SJ": { place: "비엔나 (오스트리아) - 클래식한 유럽 여행", spot: "오래된 왕실 서재의 미공개 자료실 (계획된 경험)", food: "전통 슈니첼 전문점 (별점: 4.5)", stay: "역사적인 호텔 (별점: 4.4)", imgName: "비엔나-클래식-역사", score: 82 },
-            "SP": { place: "바르셀로나 (스페인) - 열정적인 도시", spot: "현지 익스트림 스포츠 커뮤니티 장소 (즉흥적 활동)", food: "타파스 맛집 거리 (별점: 4.2)", stay: "활기찬 호스텔 또는 부티크 호텔 (별점: 4.3)", imgName: "바르셀로나-익스트림-타파스", score: 93 },
+       
+        <script>
+    // MBTI의 4가지 기질에 따른 기본 추천 데이터 확장
+    const recommendations = {
+        // 정확히 매칭되는 키 (기존 데이터 유지)
+        "ENFP_액티비티_유": { place: "아이슬란드 - 골든 서클", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
+        "ISTP_액티비티_무": { place: "네팔 - 안나푸르나 베이스 캠프 (ABC) 트레킹", spot: "현지인 샛길 루트", food: "포카라 달밧 정식", stay: "롯지", imgName: "네팔-히말라야-샛길", score: 95 },
+        "ISFJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을", spot: "툰 호수 목장 카페", food: "지역 퐁듀 식당", stay: "전통 샬레", imgName: "스위스-툰호수-샬레", score: 85 },
+        "ENTJ_출장_무": { place: "싱가포르 - 소규모 상업 지구", spot: "스타트업 커뮤니티", food: "라우 파 삿 사테", stay: "서비스 아파트먼트", imgName: "싱가포르-호커센터", score: 80 },
 
-            "default": { place: "튀르키예 - 카파도키아의 괴레메 외곽", spot: "열기구가 뜨지 않는 새벽 시간대의 비밀 전망대", food: "항아리 케밥을 파는 동네 식당 (별점: 4.1)", stay: "동굴 호텔 중에서도 가장 깊숙한 곳의 방 (별점: 4.3)", imgName: "튀르키예-카파도키아-동굴", score: 88 }
-        };
+        // ********************************************
+        // 5가지 입력값을 반영하도록 MBTI 기질별 세분화된 추천 키 추가
+        // 형식: [기질]_[예산/기간 성격]
+        // ********************************************
 
-        function getMbtiTemperament(mbti) {
-            const S_N = mbti[1];
-            const T_F = mbti[2];
-            const J_P = mbti[3];
+        // NT (분석가)
+        "NT_장기-고가": { place: "스톡홀름 (스웨덴) - 북유럽 디자인 및 IT 허브 탐방", spot: "노벨 박물관의 비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
+        "NT_단기-저가": { place: "프라하 (체코) - 철학적, 역사적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "저렴하고 오래된 선술집의 굴라쉬", stay: "중앙역 근처의 깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
 
-            if (S_N === 'N' && T_F === 'T') return 'NT';
-            if (S_N === 'N' && T_F === 'F') return 'NF';
-            if (S_N === 'S' && J_P === 'J') return 'SJ';
-            if (S_N === 'S' && J_P === 'P') return 'SP';
-            return '';
+        // NF (외교관)
+        "NF_장기-고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링 여행", spot: "명상가를 위한 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰를 가진 친환경 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
+        "NF_단기-저가": { place: "제주도 (대한민국) - 마음이 맞는 사람들과의 공동체 여행", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민들이 운영하는 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
+
+        // SJ (관리자)
+        "SJ_장기-고가": { place: "런던 (영국) - 체계적인 문화, 박물관 탐방", spot: "대영 박물관의 보수 공사가 진행되는 구역", food: "역사적인 5성급 호텔의 정통 애프터눈 티", stay: "클래식한 서비스의 유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
+        "SJ_단기-저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식/쇼핑 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "현지인 줄 서는 가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
+        
+        // SP (탐험가)
+        "SP_장기-고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 공식 코스 외의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
+        "SP_단기-저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "현지인들이 모르는 루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "저렴하지만 개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
+
+        // 궁극적인 디폴트
+        "default": { place: "튀르키예 - 카파도키아의 괴레메 외곽", spot: "열기구가 뜨지 않는 비밀 전망대", food: "항아리 케밥", stay: "동굴 호텔", imgName: "카파도키아-동굴", score: 88 }
+    };
+
+    function getMbtiTemperament(mbti) {
+        // MBTI 4글자에서 기질 (Temperament)을 판단하는 단순 로직
+        const S_N = mbti[1];
+        const T_F = mbti[2];
+        const J_P = mbti[3];
+
+        if (S_N === 'N' && T_F === 'T') return 'NT'; 
+        if (S_N === 'N' && T_F === 'F') return 'NF'; 
+        if (S_N === 'S' && J_P === 'J') return 'SJ'; 
+        if (S_N === 'S' && J_P === 'P') return 'SP'; 
+        return ''; 
+    }
+
+    function getBudgetDurationClass(duration, budget) {
+        // 기간과 예산을 기준으로 여행 성격을 4가지로 분류
+        if (duration >= 7 && budget >= 200) {
+            return '장기-고가'; // 장기간, 넉넉한 예산
+        } else if (duration >= 5 && budget >= 100) {
+            return '중기-중가'; // 중간 기간, 평균 예산 (새로운 키 추가 필요)
+        } else if (duration < 4 && budget <= 100) {
+            return '단기-저가'; // 짧은 기간, 효율적인 예산
+        } else {
+            return '중간'; // 그 외의 모든 경우
+        }
+    }
+
+
+    function recommendTrip() {
+        // 1. 입력 값 가져오기
+        const mbti = document.getElementById('mbti').value.toUpperCase().trim();
+        const purpose = document.getElementById('purpose').value;
+        const partner = document.getElementById('partner').value;
+        const duration = parseInt(document.getElementById('duration').value);
+        const budget = parseInt(document.getElementById('budget').value);
+        const resultBox = document.getElementById('resultBox');
+
+        // 2. 필수 입력값 검증 (생략)
+        if (!mbti || mbti.length !== 4 || !purpose || !partner || isNaN(duration) || isNaN(budget)) {
+            resultBox.innerHTML = `<h3>🚨 입력 오류</h3><p style="color: red;">모든 항목을 정확하게 입력했는지 확인해주세요.</p>`;
+            return;
         }
 
-        function recommendTrip() {
-            // 1. 입력 값 가져오기
-            const mbti = document.getElementById('mbti').value.toUpperCase().trim();
-            const purpose = document.getElementById('purpose').value;
-            const partner = document.getElementById('partner').value;
-            const duration = parseInt(document.getElementById('duration').value);
-            const budget = parseInt(document.getElementById('budget').value);
-            const resultBox = document.getElementById('resultBox');
+        // 3. 알고리즘: 5가지 입력값 기반 추천 데이터 선택
+        const exactKey = `${mbti.substring(0, 4)}_${purpose}_${partner}`;
+        const temperament = getMbtiTemperament(mbti);
+        const budgetClass = getBudgetDurationClass(duration, budget);
+        
+        // 1순위: 5가지 조건 중 3가지 (MBTI, 목적, 파트너)가 정확히 일치하는 경우
+        let recommendation = recommendations[exactKey];
 
-            // 2. 필수 입력값 검증
-            if (!mbti || mbti.length !== 4 || !purpose || !partner || isNaN(duration) || isNaN(budget)) {
-                resultBox.innerHTML = `
-                    <h3>🚨 입력 오류</h3>
-                    <p style="color: red;">모든 항목을 정확하게 입력했는지 확인해주세요. MBTI는 4글자여야 합니다.</p>
-                `;
-                return;
-            }
+        // 2순위: MBTI 기질 + 예산/기간 성격이 일치하는 경우 (가장 세밀한 맞춤 추천)
+        const combinedKey = `${temperament}_${budgetClass}`;
+        if (!recommendation && recommendations[combinedKey]) {
+            recommendation = recommendations[combinedKey];
+        }
 
-            // 3. 알고리즘: 맞춤형 추천 데이터 선택
-            const exactKey = `${mbti.substring(0, 4)}_${purpose}_${partner}`;
-            const temperamentKey = getMbtiTemperament(mbti);
+        // 3순위: MBTI 기질만 일치하는 경우 (중간값)
+        if (!recommendation && recommendations[temperament]) {
+            recommendation = recommendations[temperament];
+        }
 
-            let recommendation = recommendations[exactKey];
+        // 최종: 궁극적인 디폴트
+        if (!recommendation) {
+            recommendation = recommendations['default'];
+        }
+        
+        const recommendationScore = recommendation.score;
 
-            if (!recommendation && recommendations[temperamentKey]) {
-                recommendation = recommendations[temperamentKey];
-            }
+        // 4. 예산/기간 코멘트 생성 (기존 로직 유지)
+        let budgetComment = "";
+        let totalBudget = budget * 10000;
+        if (budgetClass === '장기-고가') {
+            budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 충분히 이색적인 장기 탐험이 가능합니다. 예산의 유연성이 매우 높습니다.`;
+        } else if (budgetClass === '단기-저가') {
+            budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 짧고 굵은 모험을 추천합니다. 비용 효율적인 일정을 계획해보세요.`;
+        } else {
+            budgetComment = `총 ${budget.toLocaleString()}만원의 예산은 적절합니다. 자유로운 일정을 즐기며 예상치 못한 모험에 대비할 수 있습니다.`;
+        }
 
-            if (!recommendation) {
-                recommendation = recommendations['default'];
-            }
-            
-            const recommendationScore = recommendation.score;
-
-            // 4. 알고리즘: 예산/기간에 따른 추가 코멘트 생성
-            let budgetComment = "";
-            let totalBudget = 0;
-
-            if (duration >= 7 && budget >= 200) {
-                budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 충분히 이색적인 장기 탐험이 가능합니다. 예산의 유연성이 매우 높습니다.`;
-                totalBudget = budget * 10000;
-            } else if (duration < 4 && budget <= 100) {
-                budgetComment = `총 ${budget.toLocaleString()}만원의 예산으로 짧고 굵은 모험을 추천합니다. 비용 효율적인 일정을 계획해보세요.`;
-                totalBudget = budget * 10000;
-            } else {
-                budgetComment = `총 ${budget.toLocaleString()}만원의 예산은 적절합니다. 자유로운 일정을 즐기며 예상치 못한 모험에 대비할 수 있습니다.`;
-                totalBudget = budget * 10000;
-            }
-
-            // 5. 결과 HTML 생성 (오류 해결)
-            resultBox.innerHTML = `
-                <h3>🎉 ${mbti}님, 모험이 당신을 기다립니다!</h3>
-                <div class="recommendation-content">
-                    <div class="text-details">
-                        <div class="recommendation-item">
-                            <strong>📍 MBTI 맞춤 여행지 추천</strong>
-                            ${recommendation.place}에서 당신의 모험심을 깨워보세요!
-                        </div>
-                        
-                        <div class="recommendation-item">
-                            <strong>🗺️ 현지인만 아는 특별 관광명소</strong>
-                            ${recommendation.spot}
-                        </div>
-                        <div class="recommendation-item">
-                            <strong>🍽️ 근처 음식점 / 숙박업소 리뷰/별점</strong>
-                            <p>음식점: ${recommendation.food}</p>
-                            <p>숙박업소: ${recommendation.stay}</p>
-                        </div>
-                        <div class="recommendation-item">
-                            <strong>💰 예산 정보</strong>
-                            <p>여행 기간: ${duration}일 / 예산: ${totalBudget.toLocaleString()}원</p>
-                            <p>➡️ ${budgetComment}</p>
-                        </div>
+        // 5. 결과 HTML 생성 (생략)
+        resultBox.innerHTML = `
+            <h3>🎉 ${mbti}님, 모험이 당신을 기다립니다!</h3>
+            <div class="recommendation-content">
+                <div class="text-details">
+                    <div class="recommendation-item">
+                        <strong>📍 MBTI 맞춤 여행지 추천</strong>
+                        ${recommendation.place}에서 당신의 모험심을 깨워보세요!
                     </div>
-                    <div class="image-score">
-                        <div class="image-placeholder">
-                            [관련 이미지: ${recommendation.imgName}]<br>
-                            <span style="font-style: italic;">(모험적인 스타일의 장소 이미지)</span>
-                        </div>
-                        <strong>📊 ${mbti} 맞춤 추천 점수 (${recommendationScore}점)</strong>
-                        <div class="score-chart">
-                            <div class="score-bar-container">
-                                <div class="score-bar" style="width: ${recommendationScore}%;">
-                                    ${recommendationScore}% 적합
-                                </div>
+                    
+                    <div class="recommendation-item">
+                        <strong>🗺️ 현지인만 아는 특별 관광명소</strong>
+                        ${recommendation.spot}
+                    </div>
+                    <div class="recommendation-item">
+                        <strong>🍽️ 근처 음식점 / 숙박업소 리뷰/별점</strong>
+                        <p>음식점: ${recommendation.food}</p>
+                        <p>숙박업소: ${recommendation.stay}</p>
+                    </div>
+                    <div class="recommendation-item">
+                        <strong>💰 예산 정보</strong>
+                        <p>여행 기간: ${duration}일 / 예산: ${totalBudget.toLocaleString()}원</p>
+                        <p>➡️ ${budgetComment}</p>
+                    </div>
+                </div>
+                <div class="image-score">
+                    <div class="image-placeholder">
+                        [관련 이미지: ${recommendation.imgName}]<br>
+                        <span style="font-style: italic;">(모험적인 스타일의 장소 이미지)</span>
+                    </div>
+                    <strong>📊 ${mbti} 맞춤 추천 점수 (${recommendationScore}점)</strong>
+                    <div class="score-chart">
+                        <div class="score-bar-container">
+                            <div class="score-bar" style="width: ${recommendationScore}%;">
+                                ${recommendationScore}% 적합
                             </div>
                         </div>
                     </div>
                 </div>
-            `;
-            
-            // **주의:** 백엔드 연동 코드는 제거되어 있습니다.
-        }
-    </script>
+            </div>
+        `;
+    }
+</script>
     
+    
+
 
