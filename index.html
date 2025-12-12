@@ -275,31 +275,44 @@
   
        
         
-    <script>
-    // MBTI 기질 기반 추천 데이터 확장 (키 이름을 변경했습니다: duration_class, budget_class 사용)
+   <script>
+    // ******************************************************
+    // 추천 데이터 확장: 대부분의 조합을 커버할 수 있도록 데이터 추가
+    // ******************************************************
     const recommendations = {
-        // 형식: [기질]_[목적]_[파트너]
-        "NF_액티비티_유": { place: "아이슬란드 - 골든 서클 (친목 액티비티)", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
+        // [NF] 외교관 기질 (INFP, ENFP, INFJ, ENFJ)
+        "NF_액티비티_유": { place: "아이슬란드 - 골든 서클 (함께 즐기는 액티비티)", spot: "숨겨진 동굴 폭포 '글리우프라부이'", food: "레이캬비크 핫도그", stay: "디자인 에어비앤비", imgName: "아이슬란드-빙하-모험", score: 92 },
         "NF_힐링_무": { place: "코스타리카 - 환경 친화적 정글 숙소 (개인 힐링)", spot: "숨겨진 온천", food: "유기농 채식 요리", stay: "친환경 롯지", imgName: "코스타리카-정글-힐링", score: 90 },
+        "NF_힐링_유": { place: "하와이 마우이 - 조용한 해변 리조트 (파트너와의 낭만 휴식)", spot: "선셋을 볼 수 있는 사유지 해변", food: "고급 레스토랑의 해산물", stay: "오션뷰 리조트", imgName: "하와이-마우이", score: 91 },
+        "NF_액티비티_무": { place: "발리 우붓 - 요가 및 명상 리트리트 (홀로 내면 탐색)", spot: "숨겨진 계단식 논 뷰 카페", food: "현지 채식 뷔페", stay: "고요한 리트리트 센터", imgName: "발리-리트리트", score: 89 },
+
+        // [SP] 탐험가 기질 (ISTP, ESTP, ISFP, ESFP)
         "SP_액티비티_무": { place: "네팔 - ABC 트레킹 (홀로 모험)", spot: "현지인 샛길 루트", food: "포카라 달밧 정식", stay: "롯지", imgName: "네팔-히말라야-샛길", score: 95 },
+        "SP_액티비티_유": { place: "바르셀로나 - 도시 스포츠 및 나이트 라이프 (함께 즐기는 도시)", spot: "현지 익스트림 스포츠 커뮤니티 장소", food: "타파스 맛집 거리", stay: "부티크 호텔", imgName: "바르셀로나-익스트림-타파스", score: 93 },
+        "SP_힐링_무": { place: "태국 치앙마이 - 바이크 여행과 휴식 (자유로운 탐험)", spot: "외곽의 조용한 폭포와 사원", food: "길거리 팟타이 맛집", stay: "개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
+
+        // [SJ] 관리자 기질 (ISTJ, ESTJ, ISFJ, ESFJ)
         "SJ_힐링_유": { place: "스위스 - 인터라켄 외곽의 작은 마을 (계획된 휴식)", spot: "툰 호수 목장 카페", food: "지역 퐁듀 식당", stay: "전통 샬레", imgName: "스위스-툰호수-샬레", score: 85 },
+        "SJ_힐링_무": { place: "오사카 - 완벽한 계획 하의 미식 투어 (정돈된 개인 여행)", spot: "오사카성 옆의 정돈된 작은 정원", food: "가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
+        "SJ_출장_유": { place: "런던 - 체계적인 비즈니스/문화 탐방 (파트너와 함께하는 출장)", spot: "대영 박물관 보수 공사 구역", food: "5성급 호텔 애프터눈 티", stay: "유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
+
+        // [NT] 분석가 기질 (INTP, ENTP, INTJ, ENTJ)
         "NT_출장_무": { place: "싱가포르 - 소규모 상업 지구 (집중 출장)", spot: "스타트업 커뮤니티", food: "라우 파 삿 사테", stay: "서비스 아파트먼트", imgName: "싱가포르-호커센터", score: 80 },
+        "NT_힐링_무": { place: "프라하 - 철학적, 역사적 도시 탐험 (지적 탐구)", spot: "까를교 밑의 조용한 서점 겸 펍", food: "선술집의 굴라쉬", stay: "깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
+        "NT_액티비티_유": { place: "베를린 - 혁신과 예술의 도시 (파트너와 지적 모험)", spot: "폐쇄된 공항 테겔의 재활용 공간", food: "이색적인 퓨전 레스토랑", stay: "디자인 중심 호텔", imgName: "베를린-혁신-테겔", score: 88 },
 
 
         // ********************************************
         // 예산/기간이 포함된 세분화 추천 (5가지 입력값 모두 반영)
         // 형식: [기질]_[기간]_[예산]
+        // 이 키는 1순위로 남겨두어 예산/기간에 따른 미세 조정을 담당합니다.
         // ********************************************
-
         "NT_장기_고가": { place: "스톡홀름 (스웨덴) - 북유럽 IT 허브 탐방", spot: "비공개 연구실 근처 카페", food: "미슐랭 그린 스타 레스토랑", stay: "친환경 럭셔리 호텔", imgName: "스톡홀름-노벨", score: 91 },
         "NT_단기_저가": { place: "프라하 (체코) - 철학적 도시 탐험", spot: "까를교 밑의 조용한 서점 겸 펍", food: "선술집의 굴라쉬", stay: "깔끔한 호스텔", imgName: "프라하-역사", score: 87 },
-        
         "NF_장기_고가": { place: "발리 (인도네시아) - 우붓 외곽의 영혼 힐링", spot: "명상 사원과 연결된 숨겨진 폭포", food: "건강한 비건 워크숍 식당", stay: "논뷰 풀빌라", imgName: "발리-우붓-힐링", score: 94 },
         "NF_단기_저가": { place: "제주도 (대한민국) - 공동체 예술 공간 탐방", spot: "폐교를 리모델링한 문화 예술 공간", food: "마을 주민 식당", stay: "감성 게스트하우스", imgName: "제주-예술", score: 89 },
-        
         "SJ_장기_고가": { place: "런던 (영국) - 체계적인 박물관 탐방", spot: "대영 박물관의 보수 공사 구역", food: "5성급 호텔의 정통 애프터눈 티", stay: "유서 깊은 호텔", imgName: "런던-박물관", score: 84 },
         "SJ_단기_저가": { place: "오사카 (일본) - 완벽한 계획 하의 미식 투어", spot: "오사카성 옆의 정돈된 작은 정원", food: "가성비 좋은 우동집", stay: "비즈니스 호텔", imgName: "오사카-미식", score: 81 },
-        
         "SP_장기_고가": { place: "페루 - 마추픽추와 아마존 정글 횡단 모험", spot: "잉카 트레일의 비공식 길목", food: "리마 최고의 해산물 퓨전 레스토랑", stay: "고산지대 프리미엄 롯지", imgName: "페루-마추픽추", score: 96 },
         "SP_단기_저가": { place: "태국 - 치앙마이의 바이크 및 루프탑 탐험", spot: "루프탑 클라이밍 장소", food: "길거리 팟타이 맛집", stay: "개성있는 호스텔", imgName: "치앙마이-바이크", score: 93 },
 
@@ -310,25 +323,28 @@
     function getMbtiTemperament(mbti) {
         const S_N = mbti[1];
         const T_F = mbti[2];
-        if (S_N === 'N' && T_F === 'T') return 'NT'; // 분석가
-        if (S_N === 'N' && T_F === 'F') return 'NF'; // 외교관
+        
+        // NT, NF는 N(직관) 기반으로 먼저 분류
+        if (S_N === 'N' && T_F === 'T') return 'NT'; 
+        if (S_N === 'N' && T_F === 'F') return 'NF'; 
         
         const J_P = mbti[3];
-        if (S_N === 'S' && J_P === 'J') return 'SJ'; // 관리자
-        if (S_N === 'S' && J_P === 'P') return 'SP'; // 탐험가
+        // SJ, SP는 S(감각) 기반으로 J/P로 분류
+        if (S_N === 'S' && J_P === 'J') return 'SJ'; 
+        if (S_N === 'S' && J_P === 'P') return 'SP'; 
         return ''; 
     }
 
     function recommendTrip() {
-        // 1. 입력 값 가져오기 (새로운 ID 사용)
+        // 1. 입력 값 가져오기
         const mbti = document.getElementById('mbti').value.toUpperCase().trim();
         const purpose = document.getElementById('purpose').value;
         const partner = document.getElementById('partner').value;
-        const duration_class = document.getElementById('duration_class').value; // '단기' 또는 '장기'
-        const budget_class = document.getElementById('budget_class').value;     // '저가' 또는 '고가'
+        const duration_class = document.getElementById('duration_class').value;
+        const budget_class = document.getElementById('budget_class').value;
         const resultBox = document.getElementById('resultBox');
 
-        // 2. 필수 입력값 검증
+        // 2. 필수 입력값 검증 (생략)
         if (!mbti || mbti.length !== 4 || !purpose || !partner || !duration_class || !budget_class) {
             resultBox.innerHTML = `<h3>🚨 입력 오류</h3><p style="color: red;">모든 항목을 정확하게 선택해주세요.</p>`;
             return;
@@ -337,28 +353,32 @@
         // 3. 알고리즘: 5가지 입력값 기반 추천 데이터 선택
         const temperament = getMbtiTemperament(mbti);
         
-        // 1순위 키: MBTI 기질 + 기간 + 예산 (5가지 입력값을 모두 반영)
+        // 1순위 키: MBTI 기질 + 기간 + 예산 (예: NF_단기_고가)
         const allFactorsKey = `${temperament}_${duration_class}_${budget_class}`; 
         
-        // 2순위 키: MBTI 기질 + 여행 목적 + 파트너 유무 (여행의 '성격'을 결정)
+        // 2순위 키: MBTI 기질 + 여행 목적 + 파트너 유무 (예: NF_출장_유)
         const travelStyleKey = `${temperament}_${purpose}_${partner}`; 
         
-        // 우선순위 결정
+        // --- 우선순위 결정 시작 ---
+        
+        // 1. 5가지 조건 중 4가지(기질+기간+예산)를 만족하는 가장 세밀한 추천을 시도 (예산/기간 미세조정)
         let recommendation = recommendations[allFactorsKey];
         
+        // 2. 1순위가 없다면, 여행 목적과 파트너 유무를 반영한 추천을 시도 (여행 성격)
         if (!recommendation) {
-            // 1순위 키가 없다면, 2순위 키를 시도합니다.
             recommendation = recommendations[travelStyleKey];
         }
 
+        // 3. 최종: 궁극적인 디폴트
         if (!recommendation) {
-            // 최종: 궁극적인 디폴트
             recommendation = recommendations['default'];
         }
         
+        // --- 우선순위 결정 끝 ---
+        
         const recommendationScore = recommendation.score;
 
-        // 4. 결과 출력용 코멘트 생성
+        // 4. 결과 출력용 코멘트 생성 (새로운 입력값 기반)
         let budgetComment = "";
         let durationDescription = (duration_class === '장기' ? "5일 이상의 긴 일정" : "4일 이하의 짧은 일정");
         let budgetDescription = (budget_class === '고가' ? "프리미엄 여정" : "가성비 높은 여정");
